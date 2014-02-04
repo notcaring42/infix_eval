@@ -1,0 +1,10 @@
+#!/usr/bin/python3
+import sys, os
+
+# Start at bin/infix_eval, then go up a directory and add the main package
+path = os.path.abspath(sys.argv[0])
+path = os.path.dirname(os.path.dirname(path))
+sys.path.insert(0, path)
+
+from infix_eval import infix_eval
+infix_eval.main()
