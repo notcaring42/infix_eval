@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import sys
 from PyQt5 import QtWidgets
-from infix_eval.ui import main_ui
+from ui import main_ui
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
@@ -11,3 +11,6 @@ def main():
     main_window.show()
 
     sys.exit(app.exec_())
+
+if __name__ == '__main__':
+    main()
