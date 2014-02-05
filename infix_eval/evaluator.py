@@ -1,6 +1,6 @@
 import re
 
-from binary_node import BinaryNode
+from infix_eval.binary_node import BinaryNode
 
 class Evaluator(object):
     def __init__(self):

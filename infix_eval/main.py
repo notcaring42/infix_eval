@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 import sys
 from PyQt5 import QtWidgets
-from ui import main_ui
+from infix_eval.ui import main_ui
 
 def main():
     app = QtWidgets.QApplication(sys.argv)

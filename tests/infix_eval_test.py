@@ -1,6 +1,5 @@
 import unittest
 
-import context
 from infix_eval.evaluator import Evaluator
 
 class TestEvaluator(unittest.TestCase):
