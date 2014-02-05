@@ -14,12 +14,21 @@ class Evaluator(object):
 
         return True
 
+    def _pop_operands(self, op, node_stack, operator_stack):
+        operand1 = node_stack.pop()
+        operand2 = node_stack.pop()
+
+        node = BinaryNode(op)
+        node.left = operand2
+        node.right = operand1
+        node_stack.append(node)
+
     def evaluate(self, infix):
         infix = infix.strip()
         tokens = re.split(r' +', infix)
 
         operator_stack = []
-        operand_stack = []
+        node_stack = []
 
         for token in tokens:
             if token in self.operators.keys():
@@ -28,13 +37,8 @@ class Evaluator(object):
                 else:
                     top_op = operator_stack[-1]
                     while (self.operators[top_op] >= self.operators[token]):
-                        operand1 = operand_stack.pop()
-                        operand2 = operand_stack.pop()
-
-                        node = BinaryNode(operator_stack.pop())
-                        node.left = operand2
-                        node.right = operand1
-                        operand_stack.append(node)
+                        self._pop_operands(operator_stack.pop(), node_stack, 
+                                           operator_stack)
 
                         if len(operator_stack) == 0:
                             break
@@ -42,17 +46,11 @@ class Evaluator(object):
                             top_op = operator_stack[-1]
                     operator_stack.append(token)
             elif self.is_num(token):
-                operand_stack.append(BinaryNode(float(token)))
+                node_stack.append(BinaryNode(float(token)))
             else:
                 raise ValueError("Invalid token: " + str(token))
 
         for op in operator_stack:
-           operand1 = operand_stack.pop()
-           operand2 = operand_stack.pop()
+           self._pop_operands(op, node_stack, operator_stack)            
 
-           node = BinaryNode(op)
-           node.left = operand2
-           node.right = operand1
-           operand_stack.append(node)
-            
-        return operand_stack[0]
+        return node_stack[0]
