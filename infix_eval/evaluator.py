@@ -6,7 +6,7 @@ from infix_eval.binary_node import BinaryNode
 class Evaluator(object):
     def __init__(self):
         self.Result = collections.namedtuple('Result', ['result', 'tree'])
-        self.operators = {'+': 0, '-': 0, '*': 1, '/': 1}
+        self.operators = {'+': 0, '-': 0, '*': 1, '/': 1, '^': 2}
 
     def is_num(self, num):
         try:
@@ -25,6 +25,8 @@ class Evaluator(object):
             return operand1 / operand2
         elif op == "*":
             return operand1 * operand2
+        elif op == "^":
+            return operand1 ** operand2
         else:
             raise ArgumentError("Operator invalid")
 
