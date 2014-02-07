@@ -16,6 +16,13 @@ class Evaluator(object):
 
         return True
 
+    def _separate_ops(self, string):
+        for op in self.operators.keys():
+            if op in string:
+                string = string.replace(op, ' %s ' % op)
+
+        return string
+
     def _calc(self, op, operand1, operand2):
         if op == "+":
             return operand1 + operand2
@@ -45,6 +52,7 @@ class Evaluator(object):
         
     def evaluate(self, infix):
         infix = infix.strip()
+        infix = self._separate_ops(infix)
         tokens = re.split(r' +', infix)
 
         operator_stack = []
