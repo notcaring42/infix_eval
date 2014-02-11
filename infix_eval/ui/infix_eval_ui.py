@@ -43,13 +43,23 @@ class InfixEvalUi(QtWidgets.QMainWindow):
     def print_tree(self, tree, x, y, font, offset):
         if tree is None:
             return
+
         result_text = QtWidgets.QGraphicsTextItem(str(tree.data))
         font.setPointSize(10)
         result_text.setFont(font)
         result_text.setPos(x+5, y+5)
         self.scene.addItem(TreeNode(x, y))
         self.scene.addItem(result_text)
+
         if tree.left is not None:
+            self._connect_to_children(x, y, offset)
+        if tree.right is not None:
+            self._connect_to_children(x, y, -offset)
+
+        self.print_tree(tree.left, x - offset, y + 60, font, offset * 0.70)
+        self.print_tree(tree.right, x + offset, y + 60, font, offset * 0.70)
+       
+    def _connect_to_children(self, x, y, offset):
             c1_x = x + TreeNode.radius
             c1_y = y + TreeNode.radius
             c2_x = c1_x - offset
@@ -58,21 +68,6 @@ class InfixEvalUi(QtWidgets.QMainWindow):
             dv = center_to_circle(c1_x, c1_y, c2_x, c2_y)
 
             self.scene.addLine(c1_x + dv.x, c1_y + dv.y, c2_x - dv.x, c2_y - dv.y)
-
-        if tree.right is not None:
-            c1_x = x + TreeNode.radius
-            c1_y = y + TreeNode.radius
-            c2_x = c1_x + offset
-            c2_y = c1_y + 60
-
-            dv = center_to_circle(c1_x, c1_y, c2_x, c2_y)
-
-            self.scene.addLine(c1_x + dv.x, c1_y + dv.y, c2_x - dv.x, c2_y - dv.y)
-
-
-        self.print_tree(tree.left, x - offset, y + 60, font, offset * 0.70)
-        self.print_tree(tree.right, x + offset, y + 60, font, offset * 0.70)
-       
 
        
 class TreeNode(QtWidgets.QGraphicsEllipseItem):
