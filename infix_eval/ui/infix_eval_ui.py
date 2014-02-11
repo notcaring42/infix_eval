@@ -16,6 +16,7 @@ class InfixEvalUi(QtWidgets.QMainWindow):
         self.error_dialog = ErrorDialog()
         self.scene = QtWidgets.QGraphicsScene()
         self.view = self.main_window_ui.treeView
+        self.view.setRenderHints(QtGui.QPainter.Antialiasing)
         self.main_window_ui.treeView.setScene(self.scene)
         self.scene.setSceneRect(0, 0, self.view.width(), self.view.height())
         self.evaluator = Evaluator()
