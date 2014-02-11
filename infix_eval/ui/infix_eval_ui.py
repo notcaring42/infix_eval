@@ -1,4 +1,4 @@
-from infix_eval.ui import main_ui
+from infix_eval.ui import main_ui, error_dialog_ui
 from PyQt5 import QtWidgets, QtGui, QtCore
 from infix_eval.evaluator import Evaluator
 import math
@@ -10,6 +10,7 @@ class InfixEvalUi(QtWidgets.QMainWindow):
         self.main_window_ui = main_ui.Ui_MainWindow()
         self.main_window_ui.setupUi(self)
         self.main_window_ui.evaluateButton.clicked.connect(self.eval_and_print)
+        self.error_dialog = ErrorDialog()
         self.scene = QtWidgets.QGraphicsScene()
         self.view = self.main_window_ui.treeView
         self.main_window_ui.treeView.setScene(self.scene)
@@ -22,7 +23,9 @@ class InfixEvalUi(QtWidgets.QMainWindow):
         try:
            result = self.evaluator.evaluate(expression) 
         except ValueError as e:
-            print(e)
+            self.error_dialog.error_msg_label.setText("ERROR: %s" % e)
+            self.error_dialog.show()
+            return
 
         print(result.result)
         self.scene.clear()
@@ -69,6 +72,20 @@ class InfixEvalUi(QtWidgets.QMainWindow):
 
             self.scene.addLine(c1_x + dv.x, c1_y + dv.y, c2_x - dv.x, c2_y - dv.y)
 
+class ErrorDialog(QtWidgets.QDialog):
+    def __init__(self):
+        super().__init__()
+        self.dialog_ui = error_dialog_ui.Ui_Dialog()
+        self.dialog_ui.setupUi(self)
+        self.dialog_ui.pushButton.clicked.connect(self.hide)
+
+        self.error_msg_label = self.dialog_ui.errorMsg
+        self._set_font()
+
+    def _set_font(self):
+        font = self.error_msg_label.font()
+        font.setPointSize(12)
+        self.error_msg_label.setFont(font)
        
 class TreeNode(QtWidgets.QGraphicsEllipseItem):
     diameter = 35
