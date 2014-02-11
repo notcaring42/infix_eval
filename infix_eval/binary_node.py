@@ -7,8 +7,8 @@ class BinaryNode:
     def postfix_traverse(self):
         result = ''
         if self.left is not None:
-          result += self.left.postfix_traverse()
+            result += self.left.postfix_traverse()
         if self.right is not None:
-          result += self.right.postfix_traverse()
+            result += self.right.postfix_traverse()
         result += str(self.data)
         return result + ' '

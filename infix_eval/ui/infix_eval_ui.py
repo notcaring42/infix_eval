@@ -1,12 +1,15 @@
-from infix_eval.ui import main_ui, error_dialog_ui
-from PyQt5 import QtWidgets, QtGui, QtCore
-from infix_eval.evaluator import Evaluator
 import math
 from collections import namedtuple
 
+from PyQt5 import QtWidgets, QtGui, QtCore
+
+from infix_eval.ui import main_ui, error_dialog_ui
+from infix_eval.evaluator import Evaluator
+
+
 class InfixEvalUi(QtWidgets.QMainWindow):
     def __init__(self, parent=None):
-        QtWidgets.QMainWindow.__init__(self, parent)
+        super().__init__(parent)
         self.main_window_ui = main_ui.Ui_MainWindow()
         self.main_window_ui.setupUi(self)
         self.main_window_ui.evaluateButton.clicked.connect(self.eval_and_print)
@@ -21,7 +24,7 @@ class InfixEvalUi(QtWidgets.QMainWindow):
         expression = self.main_window_ui.expressionLineEdit.text()
 
         try:
-           result = self.evaluator.evaluate(expression) 
+            result = self.evaluator.evaluate(expression)
         except ValueError as e:
             self.error_dialog.error_msg_label.setText("ERROR: %s" % e)
             self.error_dialog.show()
@@ -30,18 +33,18 @@ class InfixEvalUi(QtWidgets.QMainWindow):
         print(result.result)
         self.scene.clear()
         self.show_results(result)
-    
-    def show_results(self, result):
-       font = QtGui.QFont("Droid Sans Mono")
-       font.setPointSize(20)
 
-       result_text = QtWidgets.QGraphicsTextItem("%.3f" % result.result)
-       result_text.setFont(font)
-       result_text.setPos(-self.view.width() / 2 + 50,
-                          -self.view.height() / 2 + 20)
-       self.scene.addItem(result_text)
-       
-       self.print_tree(result.tree, 25, -100, font, 100)
+    def show_results(self, result):
+        font = QtGui.QFont("Droid Sans Mono")
+        font.setPointSize(20)
+
+        result_text = QtWidgets.QGraphicsTextItem("%.3f" % result.result)
+        result_text.setFont(font)
+        result_text.setPos(-self.view.width() / 2 + 50,
+                           -self.view.height() / 2 + 20)
+        self.scene.addItem(result_text)
+
+        self.print_tree(result.tree, 25, -100, font, 100)
 
     def print_tree(self, tree, x, y, font, offset):
         if tree is None:
@@ -61,7 +64,7 @@ class InfixEvalUi(QtWidgets.QMainWindow):
 
         self.print_tree(tree.left, x - offset, y + 60, font, offset * 0.70)
         self.print_tree(tree.right, x + offset, y + 60, font, offset * 0.70)
-       
+
     def _connect_to_children(self, x, y, offset):
             c1_x = x + TreeNode.radius
             c1_y = y + TreeNode.radius
@@ -70,7 +73,9 @@ class InfixEvalUi(QtWidgets.QMainWindow):
 
             dv = center_to_circle(c1_x, c1_y, c2_x, c2_y)
 
-            self.scene.addLine(c1_x + dv.x, c1_y + dv.y, c2_x - dv.x, c2_y - dv.y)
+            self.scene.addLine(c1_x + dv.x, c1_y + dv.y,
+                               c2_x - dv.x, c2_y - dv.y)
+
 
 class ErrorDialog(QtWidgets.QDialog):
     def __init__(self):
@@ -86,16 +91,20 @@ class ErrorDialog(QtWidgets.QDialog):
         font = self.error_msg_label.font()
         font.setPointSize(12)
         self.error_msg_label.setFont(font)
-       
+
+
 class TreeNode(QtWidgets.QGraphicsEllipseItem):
     diameter = 35
     radius = diameter/2
+
     def __init__(self, x, y):
-        super(QtWidgets.QGraphicsEllipseItem, self).__init__(QtCore.QRectF(x, y, TreeNode.diameter, TreeNode.diameter))
+        super().__init__(QtCore.QRectF(x, y, TreeNode.diameter,
+                                       TreeNode.diameter))
+
 
 def center_to_circle(x1, y1, x2, y2):
     vec = (x2 - x1, y2 - y1)
-    length = math.sqrt((x2-x1)**2 + (y2-y1)**2) 
+    length = math.sqrt((x2-x1)**2 + (y2-y1)**2)
     vec_n = ((x2-x1)/length, (y2-y1)/length)
 
     Vector = namedtuple('Vector', ['x', 'y'])
