@@ -9,7 +9,7 @@ from infix_eval.ui.infix_eval_ui import InfixEvalUi
 def main():
     app = QtWidgets.QApplication(sys.argv)
     window = InfixEvalUi()
-    window.show()
+    window.showMaximized()
     sys.exit(app.exec_())
 
 if __name__ == '__main__':
