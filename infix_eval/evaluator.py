@@ -23,11 +23,17 @@ class Evaluator(object):
 
     # Separates the operators and operands in the string
     def _separate_ops(self, string):
-        for op in self.operators.keys():
-            if op in string:
-                string = string.replace(op, ' %s ' % op)
+        # This regular expression finds all the operators in the string
+        # and spaces them out from the operands, EXCEPT for operands
+        # preceded by -, which are negative numbers
+        s = re.sub(r"(?P<op>-(?!\d+)|[\+/\*\^])", " \g<op> ", string)
 
-        return string
+        # We do a second pass because expressions like "3-1" aren't
+        # turned into "3 - 1", when they should be. This RE finds
+        # any occurances of that and fixes them
+        s = re.sub(r"(?P<operand1>\d+)-(?P<operand2>\d+)",
+                    "\g<operand1> - \g<operand2>", s)
+        return s
 
     # Returns the arithmetic result of 'operand1 op operand2'
     def _calc(self, op, operand1, operand2):

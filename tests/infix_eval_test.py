@@ -16,6 +16,8 @@ class TestEvaluator(unittest.TestCase):
         self.assertEqual(self.evaluator.evaluate("7 * 2 ^ 3").result, 56)
         self.assertEqual(self.evaluator.evaluate("7*2^3").result, 56)
         self.assertEqual(self.evaluator.evaluate("8+6*2/3-1").result, 11)
+        self.assertEqual(self.evaluator.evaluate("-4 + 3").result, -1)
+        self.assertEqual(self.evaluator.evaluate("3 + -4 * 5").result, -17)
     def testTreeResult(self):
         tree = self.evaluator.evaluate("8 + 6 * 2 / 3 - 1").tree
 
